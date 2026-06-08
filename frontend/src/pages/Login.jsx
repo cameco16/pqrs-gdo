@@ -19,10 +19,24 @@ function Login() {
     e.preventDefault();
     setError(null);
     try {
-      const { usuario, token } = await authService.login(credenciales);
+      const respuesta = await authService.login(credenciales);
+      const usuario = respuesta?.usuario;
+      const token = respuesta?.token;
+
+      if (!usuario || !token) {
+        throw new Error('Respuesta inválida del servidor');
+      }
+
       iniciarSesion(usuario, token);
-      navigate('/portal');
-    } catch {
+
+      if (usuario.rol === 'admin') {
+        navigate('/admin');
+      } else if (usuario.rol === 'agente') {
+        navigate('/agente');
+      } else {
+        navigate('/portal');
+      }
+    } catch (err) {
       setError('Correo o contraseña incorrectos.');
     }
   };
