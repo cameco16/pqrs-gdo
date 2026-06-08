@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Login from './pages/Login';
 import ListaPQRS from './pages/ListaPQRS';
+import AdminPanel from './pages/AdminPanel';
+import AgentePanel from './pages/AgentePanel';
 import FormularioPQRS from './components/FormularioPQRS';
 
 // Componente de ruta protegida: redirige al login si no está autenticado
@@ -26,7 +28,7 @@ function App() {
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
 
-          {/* Portal del usuario autenticado */}
+          {/* Portal del usuario final */}
           <Route path="/portal" element={
             <RutaProtegida>
               <ListaPQRS />
@@ -41,21 +43,31 @@ function App() {
           {/* Panel del agente */}
           <Route path="/agente" element={
             <RutaProtegida rolRequerido="agente">
-              <div><h2>Panel del Agente</h2></div>
+              <AgentePanel />
             </RutaProtegida>
           } />
 
           {/* Panel administrativo */}
           <Route path="/admin" element={
             <RutaProtegida rolRequerido="admin">
-              <div><h2>Panel Administrativo</h2></div>
+              <AdminPanel />
             </RutaProtegida>
+          } />
+
+          {/* No autorizado */}
+          <Route path="/no-autorizado" element={
+            <div style={{ textAlign: 'center', marginTop: 80 }}>
+              <h2>🚫 No autorizado</h2>
+              <p>No tienes permisos para acceder a esta página.</p>
+              <a href="/login" style={{ color: '#1F3864' }}>Volver al login</a>
+            </div>
           } />
 
           {/* Ruta 404 */}
           <Route path="*" element={
             <div style={{ textAlign: 'center', marginTop: 80 }}>
               <h2>404 — Página no encontrada</h2>
+              <a href="/login" style={{ color: '#1F3864' }}>Volver al login</a>
             </div>
           } />
         </Routes>
